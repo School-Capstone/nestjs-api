@@ -7,13 +7,11 @@ export class AuthController {
 
   @Post('register')
   register() {
-    return {
-      message: 'I am the register endpoint', // <-- Nest will automatically convert this to JSON
-    };
+    return this.authService.register();
   }
 
   @Post('login')
   login() {
-    return 'I am the login endpoint'; // <-- Nest will automatically convert this to text
+    return this.authService.login();
   }
 }
