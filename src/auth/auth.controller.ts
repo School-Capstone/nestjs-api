@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto';
+import { LoginDto, RegisterDto } from './dto';
 
 @Controller('auth') // <-- This is the global route prefix '/auth' 🌐
 export class AuthController {
@@ -12,7 +12,7 @@ export class AuthController {
   }
 
   @Post('login')
-  login() {
-    return this.authService.login();
+  login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
   }
 }

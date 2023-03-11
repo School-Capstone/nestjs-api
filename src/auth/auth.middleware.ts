@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { userSchema } from './dto';
+import { userSchema, loginSchema } from './dto';
 import { fromZodError } from 'zod-validation-error';
 
 @Injectable()
@@ -33,6 +33,35 @@ export class UserRegistrationValidationMiddleware implements NestMiddleware {
         success: false,
         statusCode: 400,
         message: '🚨 Validation Error Occurred In User Registration 🚨',
+        error: errors,
+      });
+    }
+  }
+}
+
+@Injectable()
+export class UserLoginValidationMiddleware implements NestMiddleware {
+  async use(req: Request, res: Response, next: NextFunction) {
+    try {
+      const validatedData = await loginSchema.parseAsync(req.body);
+
+      req.body = {
+        email: validatedData.email,
+        password: validatedData.password,
+      };
+      next();
+    } catch (error) {
+      const results = fromZodError(error);
+      const errors = results.details.map((error) => {
+        return {
+          path: error.path.join('.'),
+          message: error.message,
+        };
+      });
+      res.status(400).json({
+        success: false,
+        statusCode: 400,
+        message: '🚨 Validation Error Occurred In User Login 🚨',
         error: errors,
       });
     }

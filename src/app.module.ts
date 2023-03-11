@@ -4,7 +4,10 @@ import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { CategoryModule } from './category/category.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { UserRegistrationValidationMiddleware } from './auth/auth.middleware';
+import {
+  UserLoginValidationMiddleware,
+  UserRegistrationValidationMiddleware,
+} from './auth/auth.middleware';
 
 @Module({
   imports: [AuthModule, UserModule, PostModule, CategoryModule, PrismaModule],
@@ -14,5 +17,6 @@ export class AppModule implements NestModule {
     consumer
       .apply(UserRegistrationValidationMiddleware)
       .forRoutes('auth/register');
+    consumer.apply(UserLoginValidationMiddleware).forRoutes('auth/login');
   }
 }
