@@ -36,6 +36,12 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 ```bash
 #spawn the docker image
 docker-compose up dev-db -d
+
+# run migrations
+pnpm exec prisma migrate dev
+
+# visualize data
+pnpm exec prisma studio
 ```
 
 ## 🧪 🥼 Test
