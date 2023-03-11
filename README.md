@@ -12,6 +12,9 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 - [Prisma ORM](https://www.prisma.io/)
 - [Postgres DB](https://www.postgresql.org/)
 
+  - [Zod](https://zod.dev/)
+  - [Argon](https://www.npmjs.com/package/argon2)
+
 ## 📦 Installation
 
 ```bash
