@@ -17,6 +17,7 @@ export class UserRegistrationValidationMiddleware implements NestMiddleware {
         email: validatedData.email,
         password: validatedData.password,
         confirm_password: validatedData.confirm_password,
+        avatar: validatedData.avatar,
       };
       next();
     } catch (error) {
