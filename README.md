@@ -8,12 +8,19 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 
 ## 🍀 Tech Stack
 
-- [Nest](https://nestjs.com/)
-- [Prisma ORM](https://www.prisma.io/)
-- [Postgres DB](https://www.postgresql.org/)
+- [Nest](https://nestjs.com/) 🐈
+- [Prisma ORM](https://www.prisma.io/) ⧖
+- [Postgres DB](https://www.postgresql.org/) 🐘
+- [Jest](https://jestjs.io/) 🧪 🥼 🔬
 
-  - [Zod](https://zod.dev/)
+  - [@nestjs/config](https://www.npmjs.com/package/@nestjs/config)
+  - [@nestjs/jwt](https://www.npmjs.com/package/@nestjs/jwt)
+  - [@nestjs/passport](https://www.npmjs.com/package/@nestjs/passport)
   - [Argon](https://www.npmjs.com/package/argon2)
+  - [class-validator](https://www.npmjs.com/package/class-validator)
+  - [passport](https://www.npmjs.com/package/passport)
+  - [passport-jwt](https://www.npmjs.com/package/passport-jwt) \*
+  - ...
 
 ## 📦 Installation
 
@@ -37,7 +44,7 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 ## 📡 Connect to the db
 
 ```bash
-#spawn the docker image & run migrations automatically
+#spawn the docker image & run migrations **automatically**
 pnpm db:dev:restart
 
 # visualize data
