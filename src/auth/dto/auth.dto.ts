@@ -1,35 +1,80 @@
-import * as z from 'zod';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  ValidationArguments,
+  ValidationOptions,
+  registerDecorator,
+} from 'class-validator';
 
-const passwordSchema = z
-  .string()
-  .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/, {
-    message:
-      'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character',
-  });
+const regex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
+const regexError =
+  'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character';
 
-export const userSchema = z
-  .object({
-    surname: z.string(),
-    name: z.string(),
-    email: z.string().email(),
-    password: passwordSchema,
-    confirm_password: z.string(),
-    avatar: z.string().optional(),
+function MatchesPassword(
+  property: string,
+  validationOptions?: ValidationOptions,
+) {
+  return function (object: unknown, propertyName: string) {
+    registerDecorator({
+      name: 'matchesProperty',
+      target: object.constructor,
+      propertyName: propertyName,
+      constraints: [property],
+      options: validationOptions,
+      validator: {
+        validate(value: string, args: ValidationArguments) {
+          const [relatedPropertyName] = args.constraints;
+          const relatedValue = args.object[relatedPropertyName];
+          return value === relatedValue;
+        },
+        defaultMessage(args: ValidationArguments) {
+          const [relatedPropertyName] = args.constraints;
+          return `${propertyName} must match ${relatedPropertyName}`;
+        },
+      },
+    });
+  };
+}
+
+export class RegisterDto {
+  @IsString()
+  @IsNotEmpty()
+  surname: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Matches(regex, {
+    message: regexError,
   })
-  .superRefine(({ confirm_password, password }, ctx) => {
-    if (confirm_password !== password) {
-      ctx.addIssue({
-        code: 'custom',
-        message: 'The passwords do not match',
-        path: ['confirm_password'],
-      });
-    }
-  });
+  password: string;
 
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
-});
+  @IsString()
+  @IsNotEmpty()
+  @MatchesPassword('password')
+  confirm_password: string;
 
-export type RegisterDto = z.infer<typeof userSchema>;
-export type LoginDto = z.infer<typeof loginSchema>;
+  @IsString()
+  @IsOptional()
+  avatar?: string;
+}
+
+export class LoginDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
