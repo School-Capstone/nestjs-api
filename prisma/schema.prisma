@@ -36,17 +36,17 @@ model Post {
   updatedAt      DateTime   @updatedAt
   title          String
   averageRating  Float
-  author         User       @relation("WrittenPosts", fields: [authorId], references: [id])
+  author         User       @relation("WrittenPosts", fields: [authorId], references: [id], onDelete: Cascade)
   authorId       String
-  favouritedBy   User?      @relation("FavouritePosts", fields: [favouritedById], references: [id])
+  favouritedBy   User?      @relation("FavouritePosts", fields: [favouritedById], references: [id], onDelete: Cascade)
   favouritedById String?
-  categories     Category[] // This is the relation between a post and the categories it belongs to (many-to-many)
+  categories     Category[] // A post can belong to multiple categories
 }
 
 model Category {
   id    String @id @default(uuid())
   name  String @unique
-  posts Post[] // This is the relation between a category and the posts it belongs to (many-to-many)
+  posts Post[] // A category can have multiple posts
 }
 
 enum Role {
