@@ -9,7 +9,7 @@ export class CategoryService {
 
   async fetchAllCategories() {
     const categories = await this.prisma.category.findMany();
-    return { categories };
+    return categories;
   }
 
   async fetchSingleCategory(dto: CategoryParamsDto) {

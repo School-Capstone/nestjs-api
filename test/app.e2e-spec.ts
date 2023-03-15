@@ -138,7 +138,7 @@ describe('App e2e', () => {
           .withBody({
             surname: newUserDto.surname,
             name: newUserDto.name,
-            email: 'alreadyexisting@gmail.com',
+            email: 'admin@gmail.com',
             password: newUserDto.password,
             confirm_password: newUserDto.confirm_password,
           })
