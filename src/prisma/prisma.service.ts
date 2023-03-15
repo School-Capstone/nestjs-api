@@ -29,6 +29,11 @@ export class PrismaService extends PrismaClient {
           role: 'ADMIN',
         },
       }),
+      this.category.create({
+        data: {
+          name: 'Adventure',
+        },
+      }),
     ]);
   }
 }

@@ -46,6 +46,11 @@ describe('App e2e', () => {
       password: 'Password@123',
     };
 
+    const adminDto: LoginDto = {
+      email: 'admin@gmail.com',
+      password: 'Password@123',
+    };
+
     describe(' 🧪 Register', () => {
       it('should throw an error if no body is provided', async () => {
         return pactum.spec().post('/auth/register').expectStatus(400);
@@ -130,7 +135,20 @@ describe('App e2e', () => {
           .expectStatus(400);
       });
 
-      // TODO: Add test for existing email
+      it('should throw an error if password fails regex pattern', async () => {
+        return pactum
+          .spec()
+          .post('/auth/register')
+          .withBody({
+            surname: newUserDto.surname,
+            name: newUserDto.name,
+            email: newUserDto.email,
+            password: '1234',
+            confirm_password: '1234',
+          })
+          .expectStatus(400);
+      });
+
       it('should throw an error if email already exists', async () => {
         return pactum
           .spec()
@@ -220,6 +238,15 @@ describe('App e2e', () => {
           .expectStatus(200)
           .stores('token', 'access_token');
       });
+
+      it('should login an admin', async () => {
+        return pactum
+          .spec()
+          .post('/auth/login')
+          .withBody(adminDto)
+          .expectStatus(200)
+          .stores('admin_token', 'access_token');
+      });
     });
   });
 
@@ -284,17 +311,79 @@ describe('App e2e', () => {
 
   describe(' 🪂 Category', () => {
     describe(' 🧪 Get All Categories', () => {
-      //
+      it('should get all categories', async () => {
+        pactum.spec().get('/categories').expectStatus(200);
+      });
     });
+
     describe(' 🧪 Get Single Category', () => {
-      //
+      it('should do nothing if id does not exist / not provided', async () => {
+        return pactum.spec().get('/categories/123').expectStatus(200);
+      });
     });
+
     describe(' 🧪 Create Category', () => {
-      //
+      it('should throw an error if no token is provided', async () => {
+        return pactum.spec().post('/categories').expectStatus(401);
+      });
+
+      it('should throw an error if an invalid token is provided', async () => {
+        return pactum
+          .spec()
+          .post('/categories')
+          .withHeaders({ Authorization: 'Bearer invalid_token' })
+          .expectStatus(401);
+      });
+
+      it('should throw an error if the user is not an admin', async () => {
+        return pactum
+          .spec()
+          .post('/categories')
+          .withHeaders({ Authorization: 'Bearer $S{token}' })
+          .expectStatus(403);
+      });
+
+      it('should throw an error if no body is provided', async () => {
+        return pactum
+          .spec()
+          .post('/categories')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if name is empty', async () => {
+        return pactum
+          .spec()
+          .post('/categories')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ name: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if the category already exists', async () => {
+        return pactum
+          .spec()
+          .post('/categories')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ name: 'Adventure' })
+          .expectStatus(403);
+      });
+
+      it('should create a  new category', async () => {
+        return pactum
+          .spec()
+          .post('/categories')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ name: 'Sci-Fi' })
+          .expectStatus(201)
+          .expectBodyContains('Sci-Fi');
+      });
     });
+
     describe(' 🧪 Update Category', () => {
       //
     });
+
     describe(' 🧪 Delete Category', () => {
       //
     });

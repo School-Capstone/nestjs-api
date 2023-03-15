@@ -1,13 +1,7 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CategoryParamsDto {
+export class CategoryDto {
   @IsNotEmpty()
-  @IsUUID()
-  id: string;
-}
-
-export class CategoryCreationDto {
   @IsString()
-  @IsNotEmpty()
   name: string;
 }
