@@ -4,6 +4,7 @@ import * as pactum from 'pactum';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { LoginDto, RegisterDto } from 'src/auth/dto';
+import { EditUserDto } from 'src/user/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -245,7 +246,39 @@ describe('App e2e', () => {
       });
     });
     describe(' 🧪 Edit User', () => {
-      //
+      const editUserDto: EditUserDto = {
+        name: 'King Christian',
+      };
+
+      it('should throw an error if no token is provided', async () => {
+        return pactum.spec().patch('/users/me').expectStatus(401);
+      });
+
+      it('should throw an error if an invalid token is provided', async () => {
+        return pactum
+          .spec()
+          .patch('/users/me')
+          .withHeaders({ Authorization: 'Bearer invalid_token' })
+          .expectStatus(401);
+      });
+
+      it('should do nothing and return the user if no body is provided', async () => {
+        return pactum
+          .spec()
+          .patch('/users/me')
+          .withHeaders({ Authorization: `Bearer $S{token}` })
+          .expectStatus(200);
+      });
+
+      it('should edit the current user', async () => {
+        return pactum
+          .spec()
+          .patch('/users/me')
+          .withHeaders({ Authorization: `Bearer $S{token}` })
+          .withBody(editUserDto)
+          .expectStatus(200)
+          .expectBodyContains(editUserDto.name);
+      });
     });
   });
 
