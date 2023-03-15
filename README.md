@@ -13,12 +13,13 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 - [Postgres DB](https://www.postgresql.org/) 🐘
 - [Jest](https://jestjs.io/) 🧪 🥼 🔬
 
+  - [Pactum JS](https://pactumjs.github.io/) 🧪 ⚡️
+  - [Argon](https://www.npmjs.com/package/argon2)
   - [@nestjs/config](https://www.npmjs.com/package/@nestjs/config)
   - [@nestjs/jwt](https://www.npmjs.com/package/@nestjs/jwt)
-  - [@nestjs/passport](https://www.npmjs.com/package/@nestjs/passport)
-  - [Argon](https://www.npmjs.com/package/argon2)
-  - [class-validator](https://www.npmjs.com/package/class-validator)
   - [passport](https://www.npmjs.com/package/passport)
+  - [@nestjs/passport](https://www.npmjs.com/package/@nestjs/passport)
+  - [class-validator](https://www.npmjs.com/package/class-validator)
   - [passport-jwt](https://www.npmjs.com/package/passport-jwt) \*
   - ...
 
