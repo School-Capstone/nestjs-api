@@ -12,6 +12,7 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 - [Prisma ORM](https://www.prisma.io/) ⧖
 - [Postgres DB](https://www.postgresql.org/) 🐘
 - [Jest](https://jestjs.io/) 🧪 🥼 🔬
+- [Docker](https://www.docker.com/) 🐳
 
   - [Pactum JS](https://pactumjs.github.io/) 🧪 ⚡️
   - [Argon](https://www.npmjs.com/package/argon2)
@@ -45,7 +46,7 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 ## 📡 Connect to the db
 
 ```bash
-#spawn the docker image & run migrations **automatically**
+#spawn the docker image & run migrations automatically
 pnpm db:dev:restart
 
 # visualize data
