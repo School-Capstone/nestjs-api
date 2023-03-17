@@ -13,6 +13,8 @@ async function main() {
       role: 'ADMIN',
     },
   });
+
+  // await prisma.post.upsert();
 }
 main()
   .then(async () => {
