@@ -312,13 +312,25 @@ describe('App e2e', () => {
   describe(' 🪂 Category', () => {
     describe(' 🧪 Get All Categories', () => {
       it('should get all categories', async () => {
-        pactum.spec().get('/categories').expectStatus(200);
+        return pactum
+          .spec()
+          .get('/categories')
+          .expectStatus(200)
+          .stores('categoryId', 'id')
+          .stores('categoryName', 'name');
       });
     });
 
     describe(' 🧪 Get Single Category', () => {
       it('should do nothing if id does not exist / not provided', async () => {
         return pactum.spec().get('/categories/123').expectStatus(200);
+      });
+
+      it('should get a single category', async () => {
+        return pactum
+          .spec()
+          .get(`/categories/$S{categoryId}`)
+          .expectStatus(200);
       });
     });
 
@@ -381,11 +393,91 @@ describe('App e2e', () => {
     });
 
     describe(' 🧪 Update Category', () => {
-      //
+      it('should throw an error if no token is provided', async () => {
+        return pactum.spec().patch('/categories/123').expectStatus(401);
+      });
+
+      it('should throw an error if an invalid token is provided', async () => {
+        return pactum
+          .spec()
+          .patch('/categories/123')
+          .withHeaders({ Authorization: 'Bearer invalid_token' })
+          .expectStatus(401);
+      });
+
+      it('should throw an error if the user is not an admin', async () => {
+        return pactum
+          .spec()
+          .patch('/categories/123')
+          .withHeaders({ Authorization: `Bearer $S{token}` })
+          .expectStatus(403);
+      });
+
+      it('should throw an error if no body is provided', async () => {
+        return pactum
+          .spec()
+          .patch('/categories/123')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if name is empty', async () => {
+        return pactum
+          .spec()
+          .patch('/categories/123')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .withBody({ name: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if the category already exists', async () => {
+        return pactum
+          .spec()
+          .patch('/categories/123')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .withBody({ name: 'Adventure' })
+          .expectStatus(403);
+      });
+
+      it('should update the category', async () => {
+        return pactum
+          .spec()
+          .patch('/categories/$S{categoryId}')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .withBody({ name: 'Fantasy' })
+          .expectStatus(200)
+          .expectBodyContains('Fantasy');
+      });
     });
 
     describe(' 🧪 Delete Category', () => {
-      //
+      it('should throw an error if no token is provided', async () => {
+        return pactum.spec().delete('/categories/123').expectStatus(401);
+      });
+
+      it('should throw an error if an invalid token is provided', async () => {
+        return pactum
+          .spec()
+          .delete('/categories/123')
+          .withHeaders({ Authorization: 'Bearer invalid_token' })
+          .expectStatus(401);
+      });
+
+      it('should throw an error if the user is not an admin', async () => {
+        return pactum
+          .spec()
+          .delete('/categories/123')
+          .withHeaders({ Authorization: `Bearer $S{token}` })
+          .expectStatus(403);
+      });
+
+      it('should delete the category', async () => {
+        return pactum
+          .spec()
+          .delete('/categories/$S{categoryId}')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .expectStatus(200);
+      });
     });
   });
 
