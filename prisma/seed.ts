@@ -9,12 +9,55 @@ async function main() {
       name: 'Christian',
       email: 'dusabe@prisma.io',
       password:
-        '$argon2i$v=19$m=16,t=2,p=1$d0ZMTk1UT1JnQ0JFV0FJaw$tb/6imlH6DfKUOw3QL1Y+A',
+        '$argon2i$v=19$m=16,t=2,p=1$d0ZMTk1UT1JnQ0JFV0FJaw$tb/6imlH6DfKUOw3QL1Y+A', // Password@123
       role: 'ADMIN',
     },
   });
 
-  // await prisma.post.upsert();
+  await prisma.user.upsert({
+    where: { email: 'admin@gmail.com' },
+    update: {},
+    create: {
+      id: 'dc46a0ff-6aae-43e5-8451-2578c69b126c',
+      surname: 'SUDO',
+      name: 'Admin',
+      email: 'admin@gmail.com',
+      password:
+        '$argon2i$v=19$m=16,t=2,p=1$d0ZMTk1UT1JnQ0JFV0FJaw$tb/6imlH6DfKUOw3QL1Y+A', // Password@123
+      role: 'ADMIN',
+    },
+  });
+
+  const adventureCategory = await prisma.category.upsert({
+    where: { name: 'Adventure' },
+    update: {},
+    create: {
+      name: 'Adventure',
+    },
+  });
+
+  const comedyCategory = await prisma.category.upsert({
+    where: { name: 'Comedy' },
+    update: {},
+    create: {
+      name: 'Comedy',
+    },
+  });
+
+  await prisma.post.upsert({
+    where: { title: 'The Lord of the Rings' },
+    update: {},
+    create: {
+      title: 'The Lord of the Rings',
+      teaser: 'An epic high fantasy novel',
+      content:
+        'The Lord of the Rings is an epic high fantasy novel written by English author and scholar J. R. R. Tolkien.',
+      authorId: 'dc46a0ff-6aae-43e5-8451-2578c69b126c',
+      categories: {
+        connect: [{ id: adventureCategory.id }, { id: comedyCategory.id }],
+      },
+    },
+  });
 }
 main()
   .then(async () => {
