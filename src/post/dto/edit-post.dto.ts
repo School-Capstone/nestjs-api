@@ -1,23 +1,34 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class EditPostDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  title: string;
+  title?: string;
 
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  teaser: string;
+  teaser?: string;
 
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  content: string;
+  content?: string;
 
   @IsOptional()
   @IsNotEmpty()
   @IsBoolean()
-  published: boolean;
+  published?: boolean;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsArray()
+  categories: string[];
 }

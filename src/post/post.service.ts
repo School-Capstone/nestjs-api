@@ -105,12 +105,35 @@ export class PostService {
 
   async editPost(postId: string, dto: EditPostDto) {
     try {
+      const { title, teaser, content, published, categories } = dto;
       const post = await this.prisma.post.update({
         data: {
-          ...dto,
+          title,
+          teaser,
+          content,
+          published,
         },
         where: {
           id: postId,
+        },
+      });
+
+      const availableCategories = await this.prisma.category.findMany({
+        where: {
+          name: {
+            in: categories.map((category) => category),
+          },
+        },
+      });
+
+      await this.prisma.post.update({
+        where: { id: post.id },
+        data: {
+          categories: {
+            connect: availableCategories.map((category) => ({
+              id: category.id,
+            })),
+          },
         },
       });
 

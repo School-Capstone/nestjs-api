@@ -50,7 +50,7 @@ export class PostController {
   @Roles(Role.ADMIN)
   @UseGuards(JwtGuard, RolesGuard)
   @Delete(':id')
-  deletePost(@Param() postId: string) {
+  deletePost(@Param('id') postId: string) {
     return this.postService.deletePost(postId);
   }
 }
