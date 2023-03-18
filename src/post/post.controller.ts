@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -9,8 +10,9 @@ import {
 } from '@nestjs/common';
 import { Role } from '@prisma/client';
 import { PostService } from './post.service';
-import { Roles } from '../auth/decorator';
+import { GetUser, Roles } from '../auth/decorator';
 import { JwtGuard, RolesGuard } from '../auth/guard';
+import { CreatePostDto, EditPostDto } from './dto';
 
 @Controller('posts')
 export class PostController {
@@ -21,6 +23,11 @@ export class PostController {
     return this.postService.getAllPosts();
   }
 
+  @Get('published')
+  getPublishedPosts() {
+    return this.postService.getPublishedPosts();
+  }
+
   @Get(':id')
   getSinglePost(@Param('id') id: string) {
     return this.postService.getSinglePost(id);
@@ -29,19 +36,21 @@ export class PostController {
   @Roles(Role.ADMIN)
   @UseGuards(JwtGuard, RolesGuard)
   @Post()
-  createPost() {
-    // return this.postService.createPost();
+  createPost(@GetUser('id') userId: string, @Body() dto: CreatePostDto) {
+    return this.postService.createPost(userId, dto);
   }
 
-  // TODO: update a post
-  @Patch()
-  editPost() {
-    // return this.postService.editPost();
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtGuard, RolesGuard)
+  @Patch(':id')
+  editPost(@Param('id') postId: string, @Body() dto: EditPostDto) {
+    return this.postService.editPost(postId, dto);
   }
 
-  // TODO: delete a post
-  @Delete()
-  deletePost() {
-    // return this.postService.deletePost();
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtGuard, RolesGuard)
+  @Delete(':id')
+  deletePost(@Param() postId: string) {
+    return this.postService.deletePost(postId);
   }
 }

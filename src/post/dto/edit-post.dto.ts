@@ -1,6 +1,7 @@
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreatePostDto {
+export class EditPostDto {
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
   title: string;
@@ -8,8 +9,9 @@ export class CreatePostDto {
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  teaser?: string;
+  teaser: string;
 
+  @IsOptional()
   @IsNotEmpty()
   @IsString()
   content: string;
@@ -18,5 +20,4 @@ export class CreatePostDto {
   @IsNotEmpty()
   @IsBoolean()
   published: boolean;
-  authorId: string;
 }

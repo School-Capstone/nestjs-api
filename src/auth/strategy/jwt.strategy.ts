@@ -14,12 +14,17 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: { sub: string; email: string }) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: payload.sub,
-      },
-    });
-    delete user.password;
-    return user;
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: payload.sub,
+        },
+      });
+      delete user.password;
+      return user;
+    } catch (error) {
+      // TODO: what kind of error am I supposed to throw here? ForbiddenException or...
+      return error;
+    }
   }
 }
