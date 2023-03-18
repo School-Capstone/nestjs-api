@@ -22,7 +22,7 @@ export class CreatePostDto {
   @IsOptional()
   @IsNotEmpty()
   @IsBoolean()
-  published: boolean;
+  published?: boolean;
 
   @IsOptional()
   @IsNotEmpty()

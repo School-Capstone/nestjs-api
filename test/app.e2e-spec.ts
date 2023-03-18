@@ -3,8 +3,9 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as pactum from 'pactum';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { LoginDto, RegisterDto } from 'src/auth/dto';
-import { EditUserDto } from 'src/user/dto';
+import { LoginDto, RegisterDto } from '../src/auth/dto';
+import { EditUserDto } from '../src/user/dto';
+import { CreatePostDto } from 'src/post/dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -316,8 +317,8 @@ describe('App e2e', () => {
           .spec()
           .get('/categories')
           .expectStatus(200)
-          .stores('categoryId', 'id')
-          .stores('categoryName', 'name');
+          .stores('categoryId', '[0].id')
+          .stores('categoryName', '[0].name');
       });
     });
 
@@ -482,14 +483,128 @@ describe('App e2e', () => {
   });
 
   describe(' 📮 Post', () => {
+    const existingPost: CreatePostDto = {
+      title: 'The Lord of the Rings',
+      teaser: 'An epic high fantasy novel',
+      content:
+        'The Lord of the Rings is an epic high fantasy novel written by English author and scholar J. R. R. Tolkien.',
+      categories: ['Adventure', 'Dytopian', 'Anime'],
+    };
+
+    const newPost: CreatePostDto = {
+      title: 'Chronicles of Narnia',
+      teaser: 'An epic high fantasy novel',
+      content:
+        'The Chronicles of Narnia is an epic high fantasy novel written by English author and scholar C. S. Lewis',
+      categories: ['Adventure', 'Dytopian', 'Anime'],
+      published: true,
+    };
+
     describe(' 🧪 Get All Posts', () => {
-      //
+      it('should get all posts', async () => {
+        return pactum
+          .spec()
+          .get('/posts')
+          .expectStatus(200)
+          .stores('postId', '[0].id')
+          .stores('postTitle', '[0].title');
+      });
+
+      it('should get all published posts', async () => {
+        return pactum
+          .spec()
+          .get('/posts/published')
+          .expectStatus(200)
+          .expectBodyContains(true);
+      });
     });
     describe(' 🧪 Get Single Post', () => {
-      //
+      it('should get a single post', async () => {
+        return pactum
+          .spec()
+          .get('/posts/$S{postId}')
+          .expectStatus(200)
+          .expectBodyContains('$S{postTitle}');
+      });
+
+      it('should do nothing if invalid id is provided', async () => {
+        return pactum.spec().get('/posts/1').expectStatus(200);
+      });
     });
     describe(' 🧪 Create Post', () => {
-      //
+      it('should throw an error if no token is provided', async () => {
+        return pactum.spec().post('/posts').expectStatus(401);
+      });
+
+      it('should throw an error if an invalid token is provided', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: 'Bearer invalid_token' })
+          .expectStatus(401);
+      });
+
+      it('should throw an error if the user is not an admin', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: 'Bearer $S{token}' })
+          .expectStatus(403);
+      });
+
+      it('should throw an error if no body is provided', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if title is empty', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ title: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if teaser is empty', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ teaser: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if content is empty', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ content: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if the post already exists', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody(existingPost)
+          .expectStatus(403);
+      });
+
+      it('should create a  new post', async () => {
+        return pactum
+          .spec()
+          .post('/posts')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody(newPost)
+          .expectStatus(201)
+          .expectBodyContains(newPost.title);
+      });
     });
     describe(' 🧪 Update Post', () => {
       //

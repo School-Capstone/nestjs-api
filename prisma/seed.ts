@@ -14,11 +14,10 @@ async function main() {
     },
   });
 
-  await prisma.user.upsert({
+  const admin = await prisma.user.upsert({
     where: { email: 'admin@gmail.com' },
     update: {},
     create: {
-      id: 'dc46a0ff-6aae-43e5-8451-2578c69b126c',
       surname: 'SUDO',
       name: 'Admin',
       email: 'admin@gmail.com',
@@ -52,7 +51,7 @@ async function main() {
       teaser: 'An epic high fantasy novel',
       content:
         'The Lord of the Rings is an epic high fantasy novel written by English author and scholar J. R. R. Tolkien.',
-      authorId: 'dc46a0ff-6aae-43e5-8451-2578c69b126c',
+      authorId: admin.id,
       categories: {
         connect: [{ id: adventureCategory.id }, { id: comedyCategory.id }],
       },
