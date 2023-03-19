@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -42,6 +44,7 @@ export class CategoryController {
     return this.categoryService.editCategory(id, dto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Roles(Role.ADMIN)
   @UseGuards(JwtGuard, RolesGuard)
   @Delete(':id')

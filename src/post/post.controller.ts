@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -47,6 +49,7 @@ export class PostController {
     return this.postService.editPost(postId, dto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Roles(Role.ADMIN)
   @UseGuards(JwtGuard, RolesGuard)
   @Delete(':id')

@@ -485,7 +485,7 @@ describe('App e2e', () => {
           .spec()
           .delete('/categories/$S{categoryId}')
           .withHeaders({ Authorization: `Bearer $S{admin_token}` })
-          .expectStatus(200);
+          .expectStatus(204);
       });
     });
   });
@@ -724,8 +724,7 @@ describe('App e2e', () => {
           .spec()
           .delete('/posts/$S{postId}')
           .withHeaders({ Authorization: `Bearer $S{admin_token}` })
-          .expectStatus(200)
-          .expectBodyContains('$S{postId}');
+          .expectStatus(204);
       });
     });
   });
