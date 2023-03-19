@@ -14,6 +14,10 @@ This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is
 
 and with more features to come if I find the need for their introduction. 🙃
 
+Swagger documentation is available under `http://localhost:3000/api`.
+
+To generate and download a Swagger JSON file, navigate to `http://localhost:3000/api-json`
+
 ## 🍀 Tech Stack
 
 - [Nest](https://nestjs.com/) 🐈
@@ -24,6 +28,8 @@ and with more features to come if I find the need for their introduction. 🙃
 
   - [Pactum JS](https://pactumjs.github.io/) 🧪 ⚡️
   - [Argon](https://www.npmjs.com/package/argon2)
+  - [Helmet](https://www.npmjs.com/package/helmet) ⛑️
+  - [@nestjs/swagger](https://www.npmjs.com/package/@nestjs/swagger)
   - [@nestjs/config](https://www.npmjs.com/package/@nestjs/config)
   - [@nestjs/jwt](https://www.npmjs.com/package/@nestjs/jwt)
   - [passport](https://www.npmjs.com/package/passport)
