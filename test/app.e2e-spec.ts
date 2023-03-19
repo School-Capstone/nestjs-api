@@ -530,7 +530,8 @@ describe('App e2e', () => {
       it('should get a single post', async () => {
         return pactum
           .spec()
-          .get('/posts/$S{postId}')
+          .get('/posts/{id}')
+          .withPathParams('id', '$S{postId}')
           .expectStatus(200)
           .expectBodyContains('$S{postTitle}');
       });
