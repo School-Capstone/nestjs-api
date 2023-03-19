@@ -19,6 +19,19 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         where: {
           id: payload.sub,
         },
+        include: {
+          favouritePosts: true,
+          userPreference: true,
+          writtenPosts: {
+            select: {
+              id: true,
+              title: true,
+              teaser: true,
+              published: true,
+              createdAt: true,
+            },
+          },
+        },
       });
       delete user.password;
       return user;
