@@ -156,12 +156,11 @@ export class PostService {
 
   async deletePost(postId: string) {
     try {
-      const post = await this.prisma.post.delete({
+      await this.prisma.post.delete({
         where: {
           id: postId,
         },
       });
-      return post;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {

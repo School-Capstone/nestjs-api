@@ -75,12 +75,11 @@ export class CategoryService {
 
   async deleteCategory(id: string) {
     try {
-      const category = await this.prisma.category.delete({
+      await this.prisma.category.delete({
         where: {
           id,
         },
       });
-      return category;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2025') {
