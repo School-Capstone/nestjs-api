@@ -4,7 +4,15 @@
 
 This is a simple RESTful API built using [Nestjs](https://nestjs.com/), which is a progressive Node.js framework for building efficient, reliable and scalable server-side applications.
 
-⚠️ This is currently a work-in-progress endeavour, but I plan for it to be a simple API for a blog.
+⚠️ This is currently a work-in-progress endeavour, but I plan for it to be a simple API for a blog. It currently has management for:
+
+- users
+- authentication
+- posts
+- categories
+- e2e tests
+
+and with more features to come if I find the need for their introduction. 🙃
 
 ## 🍀 Tech Stack
 
