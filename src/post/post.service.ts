@@ -118,24 +118,26 @@ export class PostService {
         },
       });
 
-      const availableCategories = await this.prisma.category.findMany({
-        where: {
-          name: {
-            in: categories.map((category) => category),
+      if (categories && categories.length) {
+        const availableCategories = await this.prisma.category.findMany({
+          where: {
+            name: {
+              in: categories.map((category) => category),
+            },
           },
-        },
-      });
+        });
 
-      await this.prisma.post.update({
-        where: { id: post.id },
-        data: {
-          categories: {
-            connect: availableCategories.map((category) => ({
-              id: category.id,
-            })),
+        await this.prisma.post.update({
+          where: { id: post.id },
+          data: {
+            categories: {
+              connect: availableCategories.map((category) => ({
+                id: category.id,
+              })),
+            },
           },
-        },
-      });
+        });
+      }
 
       return post;
     } catch (error) {

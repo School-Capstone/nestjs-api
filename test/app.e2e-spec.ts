@@ -33,7 +33,7 @@ describe('App e2e', () => {
     await app.close();
   });
 
-  describe(' 🚔 Auth', () => {
+  describe(' 🚔 Auth 🛡️ ', () => {
     const newUserDto: RegisterDto = {
       surname: 'DUSABE',
       name: 'Christian',
@@ -251,7 +251,7 @@ describe('App e2e', () => {
     });
   });
 
-  describe(' 🎭 User', () => {
+  describe(' 🎭 User 🧑‍🚀 ', () => {
     describe(' 🧪 Get me / Current User / Profile', () => {
       it('should throw an error if no token is provided', async () => {
         return pactum.spec().get('/users/me').expectStatus(401);
@@ -310,7 +310,7 @@ describe('App e2e', () => {
     });
   });
 
-  describe(' 🪂 Category', () => {
+  describe(' 🪂 Category 🔖 ', () => {
     describe(' 🧪 Get All Categories', () => {
       it('should get all categories', async () => {
         return pactum
@@ -472,6 +472,14 @@ describe('App e2e', () => {
           .expectStatus(403);
       });
 
+      it('should throw an error if the category does not exist', async () => {
+        return pactum
+          .spec()
+          .delete('/categories/123')
+          .withHeaders({ Authorization: `Bearer $S{token}` })
+          .expectStatus(403);
+      });
+
       it('should delete the category', async () => {
         return pactum
           .spec()
@@ -482,7 +490,7 @@ describe('App e2e', () => {
     });
   });
 
-  describe(' 📮 Post', () => {
+  describe(' 📮 Post 📖', () => {
     const existingPost: CreatePostDto = {
       title: 'The Lord of the Rings',
       teaser: 'An epic high fantasy novel',
@@ -607,10 +615,117 @@ describe('App e2e', () => {
       });
     });
     describe(' 🧪 Update Post', () => {
-      //
+      it('should throw an error if no token is provided', async () => {
+        return pactum.spec().patch('/posts/$S{postId}').expectStatus(401);
+      });
+
+      it('should throw an error if an invalid token is provided', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: 'Bearer invalid_token' })
+          .expectStatus(401);
+      });
+
+      it('should throw an error if the user is not an admin', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: 'Bearer $S{token}' })
+          .expectStatus(403);
+      });
+
+      it('should do nothing if no body is provided', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .expectStatus(200);
+      });
+
+      it('should throw an error if title is empty', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ title: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if teaser is empty', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ teaser: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if content is empty', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ content: '' })
+          .expectStatus(400);
+      });
+
+      it('should throw an error if the post already exists', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody(newPost)
+          .expectStatus(403);
+      });
+
+      it('should edit the new post', async () => {
+        return pactum
+          .spec()
+          .patch('/posts/$S{postId}')
+          .withHeaders({ Authorization: 'Bearer $S{admin_token}' })
+          .withBody({ published: true })
+          .expectStatus(200)
+          .expectBodyContains(true);
+      });
     });
     describe(' 🧪 Delete Post', () => {
-      //
+      it('should throw an error if no token is provided', async () => {
+        return pactum.spec().delete('/posts/123').expectStatus(401);
+      });
+
+      it('should throw an error if an invalid token is provided', async () => {
+        return pactum
+          .spec()
+          .delete('/posts/123')
+          .withHeaders({ Authorization: 'Bearer invalid_token' })
+          .expectStatus(401);
+      });
+
+      it('should throw an error if the user is not an admin', async () => {
+        return pactum
+          .spec()
+          .delete('/posts/123')
+          .withHeaders({ Authorization: `Bearer $S{token}` })
+          .expectStatus(403);
+      });
+
+      it('should throw an error if the post does not exist', async () => {
+        return pactum
+          .spec()
+          .delete('/posts/123')
+          .withHeaders({ Authorization: `Bearer $S{token}` })
+          .expectStatus(403);
+      });
+
+      it('should delete the post', async () => {
+        return pactum
+          .spec()
+          .delete('/posts/$S{postId}')
+          .withHeaders({ Authorization: `Bearer $S{admin_token}` })
+          .expectStatus(200)
+          .expectBodyContains('$S{postId}');
+      });
     });
   });
 });

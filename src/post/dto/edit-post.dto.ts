@@ -30,5 +30,5 @@ export class EditPostDto {
   @IsOptional()
   @IsNotEmpty()
   @IsArray()
-  categories: string[];
+  categories?: string[];
 }
