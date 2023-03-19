@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { CategoryModule } from './category/category.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -16,5 +17,6 @@ import { PrismaModule } from './prisma/prisma.module';
     CategoryModule,
     PrismaModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
