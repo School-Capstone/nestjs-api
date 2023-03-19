@@ -65,3 +65,7 @@ pnpm exec prisma studio
 # test coverage
  pnpm run test:cov
 ```
+
+## 🙇 Appreciation
+
+Major, major, and major appreciation to [Vlad](https://www.youtube.com/@CodeWithVlad)
