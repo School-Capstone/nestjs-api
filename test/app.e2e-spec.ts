@@ -736,15 +736,6 @@ describe('App e2e', () => {
 describe('System Test 🌐', () => {
   let app: INestApplication;
 
-  // beforeAll(async () => {
-  //   const realAppPort = 8080;
-
-  //   const moduleRef = await NestFactory.create(AppModule);
-  //   app = moduleRef.createNestApplication();
-  //   await app.listen(realAppPort);
-  // });
-
-
   beforeAll(async () => {
     const realAppPort = 8081;
 
