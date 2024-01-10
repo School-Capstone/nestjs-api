@@ -6,6 +6,8 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { LoginDto, RegisterDto } from '../src/auth/dto';
 import { EditUserDto } from '../src/user/dto';
 import { CreatePostDto } from 'src/post/dto';
+import axios from 'axios';
+import { NestFactory } from '@nestjs/core';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -729,3 +731,65 @@ describe('App e2e', () => {
     });
   });
 });
+
+
+describe('System Test 🌐', () => {
+  let app: INestApplication;
+
+  // beforeAll(async () => {
+  //   const realAppPort = 8080;
+
+  //   const moduleRef = await NestFactory.create(AppModule);
+  //   app = moduleRef.createNestApplication();
+  //   await app.listen(realAppPort);
+  // });
+
+
+  beforeAll(async () => {
+    const realAppPort = 8081;
+
+    const moduleRef = await NestFactory.create(AppModule);
+    app = moduleRef;
+    await app.listen(realAppPort);
+  });
+
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  const newUserDto: RegisterDto = {
+    surname: 'Eric',
+    name: 'Christian',
+    email: 'eric@gmail.com',
+    password: 'Password@123',
+    confirm_password: 'Password@123',
+  };
+
+  const userDto: LoginDto = {
+    email: 'eric@gmail.com',
+    password: 'Password@123',
+  };
+
+
+  it('should register a new user', async () => {
+    const registerResponse = await axios.post('http://localhost:8080/auth/register', newUserDto);
+
+    console.log('Registration Response:', registerResponse.data);
+    console.log('Access Token:', registerResponse.data.access_token);
+  });
+
+  it('should perform a complete user login and post creation flow', async () => {
+    const registerResponse = await axios.post('http://localhost:8080/auth/login', userDto);
+    const accessToken = registerResponse.data.access_token;
+
+    console.log('Registration Response:', registerResponse.data);
+    console.log('Access Tokenre:', accessToken);
+
+    const allPosts = await axios.get('http://localhost:8080/posts');
+
+    console.log('Create Post Response:', allPosts);
+
+  });
+});
+
